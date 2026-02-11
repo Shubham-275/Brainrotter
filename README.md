@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brainrotter - AI Meme Generator
+
+AI-powered meme generator built with [TinyFish](https://www.tinyfish.ai) web agents. Type anything and we'll make memes from it.
+
+Inspired by [brainrot.run](https://www.brainrot.run) (Browserbase/Stagehand).
+
+## Screenshots
+
+### Desktop
+![Desktop Screenshot](screenshots/desktop.png)
+
+### Mobile
+![Mobile Screenshot](screenshots/mobile.png)
+
+## How It Works
+
+1. **Type anything** - Enter any thought, feeling, or random idea
+2. **AI agents deploy** - TinyFish web agents browse imgflip.com
+3. **Template matched** - AI picks the perfect meme template for your vibe
+4. **Meme generated** - Captions are auto-filled and meme is created instantly
+
+## Tech Stack
+
+- **Next.js 16** - React framework
+- **TinyFish** - AI web agent API for browser automation
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **TypeScript** - Type safety
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repo
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create `.env.local` with your TinyFish API key:
+   ```
+   TINYFISH_API_KEY=your_api_key_here
+   ```
+4. Run the dev server:
+   ```bash
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Project Structure
+
+```
+app/
+├── api/
+│   ├── generate/route.ts     # Meme generation via TinyFish SSE
+│   └── meme-count/route.ts   # Meme counter
+├── components/               # UI components
+├── config/constants.ts       # Configuration
+├── about/page.tsx            # About page
+├── docs/page.tsx             # Documentation
+├── faq/page.tsx              # FAQ
+├── globals.css               # Global styles + animations
+├── layout.tsx                # Root layout
+└── page.tsx                  # Home page
+lib/
+├── tinyfish.ts               # TinyFish API helper
+└── utils.ts                  # Utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `TINYFISH_API_KEY` | Yes | TinyFish API key from [tinyfish.ai](https://www.tinyfish.ai) |
+| `PRODUCTION_URL` | No | Production URL for meme counter |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy on [Vercel](https://vercel.com) or any platform that supports Next.js. Set the `TINYFISH_API_KEY` environment variable in your deployment settings.
