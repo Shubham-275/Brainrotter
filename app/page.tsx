@@ -14,6 +14,24 @@ import { MAX_CONCURRENT_MEMES } from "./config/constants";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+const EXAMPLE_PROMPTS = [
+  "When the code works on first try",
+  "Monday morning standup meetings",
+  "Deploying to production on Friday",
+  "My brain at 3am vs during meetings",
+  "When someone says 'quick fix'",
+  "AI replacing my job but I'm the AI",
+];
+
+const SAMPLE_MEMES = [
+  { name: "Drake Hotline Bling", emoji: "🎵", color: "from-yellow-400 to-orange-500" },
+  { name: "Distracted Boyfriend", emoji: "👀", color: "from-pink-400 to-red-500" },
+  { name: "Two Buttons", emoji: "😰", color: "from-blue-400 to-indigo-500" },
+  { name: "Change My Mind", emoji: "🤔", color: "from-green-400 to-teal-500" },
+  { name: "Expanding Brain", emoji: "🧠", color: "from-purple-400 to-violet-500" },
+  { name: "Always Has Been", emoji: "🔫", color: "from-cyan-400 to-blue-500" },
+];
+
 interface Meme {
   index: number;
   imageUrl: string;
@@ -157,7 +175,6 @@ export default function Home() {
                       )
                     );
 
-                    // Save to localStorage
                     const newMeme = {
                       ...result,
                       query: message,
@@ -167,7 +184,10 @@ export default function Home() {
                       localStorage.getItem("recentMemes") || "[]"
                     );
                     const updated = [newMeme, ...existing].slice(0, 12);
-                    localStorage.setItem("recentMemes", JSON.stringify(updated));
+                    localStorage.setItem(
+                      "recentMemes",
+                      JSON.stringify(updated)
+                    );
                     setRecentMemes(updated);
 
                     if (!firstResponseReceived) {
@@ -226,69 +246,77 @@ export default function Home() {
   };
 
   return (
-    <div className="p-6 pb-28 sm:p-16 sm:pb-28">
-      <main className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
-          {/* Left column - Header */}
-          <div className="w-full lg:w-1/2 lg:sticky lg:top-16">
-            <h1 className="text-4xl sm:text-6xl font-bold tracking-wider text-[#1a1b1e] dark:text-white leading-tight">
-              WELCOME TO
-              <br />
-              <span className="flex items-start">
-                <Link href="https://www.tinyfish.ai" target="_blank">
-                  <Logo className="h-8 sm:h-12 w-8 sm:w-12 mr-1 text-[#1a1b1e] dark:text-white mt-1" />
-                </Link>
-                RAINROTTER
-              </span>
-              <span className="block">GENERATOR</span>
-            </h1>
-
-            <MemeCounter />
-
-            {!isMobile && (
-              <StreamViewer
-                streamingUrls={streamingUrls}
-                activeSessions={activeSessions}
-              />
-            )}
-
-            {/* How it works section */}
-            <div className="mt-8 hidden lg:block">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-                How it works
-              </h3>
-              <div className="space-y-3">
-                {[
-                  "Type anything you want to say",
-                  "TinyFish agents browse imgflip.com",
-                  "AI picks the perfect meme template",
-                  "Captions are auto-filled and meme is generated",
-                ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#EF3604]/10 text-[#EF3604] flex items-center justify-center text-xs font-bold">
-                      {i + 1}
+    <div className="min-h-screen pb-20">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden noise-overlay">
+        <div className="animated-gradient absolute inset-0 opacity-[0.06]" />
+        <div className="relative px-6 pt-10 pb-8 sm:px-16 sm:pt-16 sm:pb-12">
+          <div className="max-w-6xl mx-auto">
+            {/* Title */}
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-[#1a1b1e] dark:text-white leading-[0.9]">
+                  <span className="block text-lg sm:text-xl font-medium tracking-widest text-gray-500 dark:text-gray-400 mb-2 uppercase">
+                    Welcome to
+                  </span>
+                  <span className="flex items-center justify-center gap-1">
+                    <Link href="https://www.tinyfish.ai" target="_blank" className="animate-float inline-block">
+                      <Logo className="h-12 sm:h-16 lg:h-20 w-12 sm:w-16 lg:w-20 text-[#1a1b1e] dark:text-white" />
+                    </Link>
+                    <span className="bg-gradient-to-r from-[#EF3604] via-[#FF6B3D] to-[#EF3604] bg-clip-text text-transparent">
+                      RAINROTTER
                     </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {step}
-                    </span>
-                  </div>
-                ))}
+                  </span>
+                </h1>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mt-3"
+              >
+                <MemeCounter />
+              </motion.div>
+
+              {/* Floating emojis decoration */}
+              <div className="absolute top-8 left-[10%] text-3xl animate-float opacity-60 hidden sm:block">
+                🧠
+              </div>
+              <div className="absolute top-16 right-[12%] text-2xl animate-float-delayed opacity-50 hidden sm:block">
+                💀
+              </div>
+              <div className="absolute bottom-12 left-[15%] text-2xl animate-float-delayed opacity-40 hidden lg:block">
+                🔥
+              </div>
+              <div className="absolute bottom-8 right-[18%] text-3xl animate-float opacity-50 hidden lg:block">
+                😭
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Right column - Generator */}
-          <div className="w-full lg:w-1/2">
-            {/* Input section */}
-            <div className="mb-4">
-              <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300">
-                Have something to say?
-                <br />
-                <span className="text-gray-500 dark:text-gray-400">
-                  We&apos;ll make memes from it
-                </span>
-              </h2>
-            </div>
+      {/* Generator Section */}
+      <div className="px-6 sm:px-16 -mt-2">
+        <div className="max-w-2xl mx-auto">
+          {/* Input Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 p-6 sm:p-8"
+          >
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-1">
+              Have something to say? 💬
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
+              Type anything and we&apos;ll make memes from it
+            </p>
 
             <form onSubmit={handleSubmit} className="flex gap-3">
               <input
@@ -296,7 +324,7 @@ export default function Home() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type anything..."
-                className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 px-4 py-2.5 text-sm sm:text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#EF3604] focus:border-transparent transition-shadow duration-200"
+                className="flex-1 rounded-xl border-2 border-gray-200 dark:border-gray-700 px-4 py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#EF3604] focus:border-transparent transition-all duration-200 placeholder:text-gray-400"
                 disabled={isLoading || !allSessionsComplete}
               />
               <motion.button
@@ -304,16 +332,16 @@ export default function Home() {
                 disabled={!message.trim() || isLoading || !allSessionsComplete}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className="bg-[#EF3604] px-6 py-2.5 rounded-lg font-bold text-white hover:opacity-90 transition-all duration-200 border-2 border-[#1a1b1e]/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shadow-[4px_4px_0px_#1a1b1e] hover:shadow-none active:translate-x-1 active:translate-y-1 hover:bg-[#FF4B1F]"
+                className="animated-gradient px-6 sm:px-8 py-3 rounded-xl font-bold text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap shadow-lg shadow-[#EF3604]/25 hover:shadow-xl hover:shadow-[#EF3604]/30 active:scale-95"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <motion.span className="flex items-center justify-center gap-2">
+                <motion.span className="flex items-center justify-center gap-2 text-sm sm:text-base">
                   GENERATE
                   {isHovered && (
                     <motion.span
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
+                      initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     >
                       ⚡
                     </motion.span>
@@ -322,83 +350,180 @@ export default function Home() {
               </motion.button>
             </form>
 
+            {/* Example Prompts */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {EXAMPLE_PROMPTS.slice(0, isMobile ? 3 : 6).map((prompt, i) => (
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4 + i * 0.05 }}
+                  onClick={() => setMessage(prompt)}
+                  disabled={isLoading || !allSessionsComplete}
+                  className="px-3 py-1.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-[#EF3604]/10 hover:text-[#EF3604] dark:hover:text-[#FF6B3D] transition-colors border border-gray-200 dark:border-gray-700 hover:border-[#EF3604]/30 disabled:opacity-50"
+                >
+                  {prompt}
+                </motion.button>
+              ))}
+            </div>
+
             <GenerationInfo isVisible={isLoading} />
 
             {/* Progress bar */}
-            <div className="mt-8 w-full">
+            <div className="mt-6">
               <MemeProgress
                 current={successfulMemes}
                 total={MAX_CONCURRENT_MEMES}
               />
             </div>
 
-            {/* Mobile stream viewer */}
-            {isMobile && (
-              <StreamViewer
-                streamingUrls={streamingUrls}
-                activeSessions={activeSessions}
-              />
-            )}
+            {/* Stream viewer */}
+            <StreamViewer
+              streamingUrls={streamingUrls}
+              activeSessions={activeSessions}
+            />
+          </motion.div>
 
-            {/* Loading skeletons */}
-            {isLoading && (
-              <div className="mt-6 w-full">
-                <div className="grid grid-cols-2 gap-4">
-                  {loadingStates.map((state) => (
-                    <MemeSkeleton
-                      key={`loading-${state.index}`}
-                      steps={state.steps}
-                      index={state.index}
-                      streamingUrl={state.streamingUrl}
-                      isComplete={state.isComplete}
-                    />
-                  ))}
-                </div>
+          {/* Loading skeletons */}
+          {isLoading && (
+            <div className="mt-6">
+              <div className="grid grid-cols-2 gap-4">
+                {loadingStates.map((state) => (
+                  <MemeSkeleton
+                    key={`loading-${state.index}`}
+                    steps={state.steps}
+                    index={state.index}
+                    streamingUrl={state.streamingUrl}
+                    isComplete={state.isComplete}
+                  />
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Results */}
-            {!isLoading && memes.length > 0 && (
-              <>
-                <div className="mt-8 mb-4 text-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Results for: &quot;{submittedQuery}&quot;
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 w-full">
-                  {memes.map((meme, i) => (
-                    <MemeCard
-                      key={`${meme.index}-${i}`}
-                      imageUrl={meme.imageUrl}
-                      templateName={meme.templateName}
-                      index={i}
-                      total={MAX_CONCURRENT_MEMES}
-                    />
-                  ))}
-                  {/* Show remaining skeletons for still-loading memes */}
-                  {Array(MAX_CONCURRENT_MEMES)
-                    .fill(null)
-                    .map((_, i) => {
-                      if (memes.find((m) => m.index === i)) return null;
-                      return (
-                        <MemeSkeleton
-                          key={`remaining-${i}`}
-                          steps={loadingStates[i]?.steps || []}
-                          index={i}
-                          streamingUrl={loadingStates[i]?.streamingUrl}
-                          isComplete={loadingStates[i]?.isComplete}
-                        />
-                      );
-                    })}
-                </div>
-              </>
-            )}
+          {/* Results */}
+          {!isLoading && memes.length > 0 && (
+            <>
+              <div className="mt-8 mb-4 text-center">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-[#EF3604]/10 text-sm text-[#EF3604] font-medium">
+                  Results for: &quot;{submittedQuery}&quot;
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {memes.map((meme, i) => (
+                  <MemeCard
+                    key={`${meme.index}-${i}`}
+                    imageUrl={meme.imageUrl}
+                    templateName={meme.templateName}
+                    index={i}
+                    total={MAX_CONCURRENT_MEMES}
+                  />
+                ))}
+                {Array(MAX_CONCURRENT_MEMES)
+                  .fill(null)
+                  .map((_, i) => {
+                    if (memes.find((m) => m.index === i)) return null;
+                    return (
+                      <MemeSkeleton
+                        key={`remaining-${i}`}
+                        steps={loadingStates[i]?.steps || []}
+                        index={i}
+                        streamingUrl={loadingStates[i]?.streamingUrl}
+                        isComplete={loadingStates[i]?.isComplete}
+                      />
+                    );
+                  })}
+              </div>
+            </>
+          )}
 
-            {/* Recent memes */}
-            <RecentlyGenerated recentMemes={recentMemes} />
+          {/* Recent memes */}
+          <RecentlyGenerated recentMemes={recentMemes} />
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="px-6 sm:px-16 mt-16 mb-8">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-[#1a1b1e] dark:text-white mb-8">
+            How It Works
+          </h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { step: "1", icon: "✍️", title: "Type anything", desc: "Enter any thought, feeling, or random idea" },
+              { step: "2", icon: "🤖", title: "AI agents deploy", desc: "TinyFish web agents browse imgflip.com" },
+              { step: "3", icon: "🎯", title: "Template matched", desc: "AI picks the perfect meme for your vibe" },
+              { step: "4", icon: "🎉", title: "Meme generated!", desc: "Captions filled & meme created instantly" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                className="relative bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 text-center group hover:border-[#EF3604]/30 transition-colors"
+              >
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full animated-gradient text-white text-xs font-bold flex items-center justify-center shadow-md">
+                  {item.step}
+                </div>
+                <div className="text-3xl mb-2 mt-1">{item.icon}</div>
+                <h3 className="font-bold text-sm text-gray-800 dark:text-gray-200">{item.title}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Popular Templates Showcase */}
+      <div className="px-6 sm:px-16 mt-8 mb-16">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-[#1a1b1e] dark:text-white mb-2">
+            Popular Templates
+          </h2>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-8">
+            Our AI agents pick from thousands of trending meme templates
+          </p>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+            {SAMPLE_MEMES.map((meme, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 + i * 0.05 }}
+                whileHover={{ scale: 1.05, rotate: i % 2 === 0 ? 2 : -2 }}
+                className={`aspect-square rounded-2xl bg-gradient-to-br ${meme.color} flex flex-col items-center justify-center p-3 cursor-default shadow-md hover:shadow-lg transition-shadow`}
+              >
+                <span className="text-3xl sm:text-4xl mb-1">{meme.emoji}</span>
+                <span className="text-[9px] sm:text-[10px] text-white/90 font-medium text-center leading-tight">
+                  {meme.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Scrolling Marquee */}
+      <div className="overflow-hidden py-4 bg-[#EF3604]/5 border-y border-[#EF3604]/10">
+        <div className="animate-marquee whitespace-nowrap flex gap-8">
+          {[...Array(2)].map((_, setIdx) => (
+            <div key={setIdx} className="flex gap-8 items-center">
+              {[
+                "🧠 BRAINROT", "💀 CERTIFIED", "🔥 FIRE MEMES", "😭 NO CAP",
+                "⚡ AI POWERED", "🤖 WEB AGENTS", "🎯 AUTO GENERATED", "✨ INSTANT MEMES",
+              ].map((text, i) => (
+                <span
+                  key={i}
+                  className="text-sm font-bold text-[#EF3604]/40 dark:text-[#FF6B3D]/30 uppercase tracking-wider"
+                >
+                  {text}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <StickyFooter />
     </div>
   );
